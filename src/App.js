@@ -1,43 +1,32 @@
 import React, { Component } from 'react';
 import CustomModal from './components/Modal';
+import axios from 'axios';
 
-const todoItems = [
-  {
-    "id": 1,
-    "title": "Nahid",
-    "description": "this is Nahid Hasan",
-    "completed": false
-  },
-  {
-    "id": 2,
-    "title": "Burger Builder",
-    "description": "This is Burger Builder Project",
-    "completed": true
-  },
-  {
-    "id": 3,
-    "title": "Video Streaming Website",
-    "description": "This is Video Streaming Website",
-    "completed": true
-  },
-  {
-    "id": 4,
-    "title": "E-learning Project Using Django",
-    "description": "this is E-learning Project Using Django",
-    "completed": true
-  }
-];
 
 class App extends Component {
   state = {
     viewCompleted: false,
-    todoList: todoItems,
+    todoList: [],
     modal: false,
     activeItem: {
       title: "",
       description: "",
       completed: false,
     }
+  }
+  componentDidMount() {
+    this.refreshList();
+  }
+  refreshList = () => {
+    axios
+      .get("http://127.0.0.1:8000/api/todos/")
+      .then((res) => {
+        this.setState({ todoList: res.data })
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+
   }
 
   toggle = () => {
@@ -46,11 +35,35 @@ class App extends Component {
 
   handleSubmit = (item) => {
     this.toggle();
+    if (item.id) {
+      console.log(item.id);
+      axios
+        .put(`http://127.0.0.1:8000/api/todos/${item.id}/`, item)
+        .then((res) => {
+          console.log(item);
+          this.refreshList();
+        })
+      return;
+
+    }
+    axios
+      .post("http://127.0.0.1:8000/api/todos/", item)
+      .then((res) => {
+        console.log(res.data);
+        this.refreshList()
+      });
 
     alert("save" + JSON.stringify(item));
   };
 
   handleDelete = (item) => {
+    axios
+      .delete(`http://127.0.0.1:8000/api/todos/${item.id}/`)
+      .then((res) => {
+        console.log(res);
+        this.refreshList();
+      })
+
     alert("delete" + JSON.stringify(item));
   };
 
@@ -61,7 +74,9 @@ class App extends Component {
   };
 
   editItem = (item) => {
-    this.setState({ activeItem: item, modal: !this.state.modal });
+    this.setState({ activeItem: item, modal: !this.state.modal })
+
+
   };
 
 

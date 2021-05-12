@@ -14,7 +14,7 @@ class CustomModal extends Component {
 
         if (e.target.type === 'checkbox') {
             value = e.target.checked;
-            console.log(value);
+
         }
         const activeItem = { ...this.state.activeItem, [name]: value };
         this.setState({ activeItem });
