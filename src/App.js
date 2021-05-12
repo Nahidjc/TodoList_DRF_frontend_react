@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import CustomModal from './components/Modal';
 
 const todoItems = [
   {
@@ -31,7 +32,37 @@ class App extends Component {
   state = {
     viewCompleted: false,
     todoList: todoItems,
+    modal: false,
+    activeItem: {
+      title: "",
+      description: "",
+      completed: false,
+    }
   }
+
+  toggle = () => {
+    this.setState({ modal: !this.state.modal })
+  }
+
+  handleSubmit = (item) => {
+    this.toggle();
+
+    alert("save" + JSON.stringify(item));
+  };
+
+  handleDelete = (item) => {
+    alert("delete" + JSON.stringify(item));
+  };
+
+  createItem = () => {
+    const item = { title: "", description: "", completed: false };
+
+    this.setState({ activeItem: item, modal: !this.state.modal });
+  };
+
+  editItem = (item) => {
+    this.setState({ activeItem: item, modal: !this.state.modal });
+  };
 
 
   displayCompleted = status => {
@@ -81,11 +112,13 @@ class App extends Component {
         <span>
           <button
             className="btn btn-secondary mr-2"
+            onClick={() => this.editItem(item)}
           >
             Edit
           </button>
           <button
             className="btn btn-danger"
+            onClick={() => this.handleDelete(item)}
           >
             Delete
           </button>
@@ -105,6 +138,7 @@ class App extends Component {
               <div className="mb-4">
                 <button
                   className="btn btn-primary"
+                  onClick={this.createItem}
                 >
                   Add task
               </button>
@@ -116,6 +150,12 @@ class App extends Component {
             </div>
           </div>
         </div>
+        {this.state.modal ? (
+          <CustomModal
+            activeItem={this.state.activeItem}
+            toggle={this.toggle}
+            onSave={this.handleSubmit} />
+        ) : null}
       </main>
     );
   }
