@@ -1,11 +1,12 @@
 body {
-  background-color: black;
+  background-color: rgb(86, 207, 201) !important;
 }
-#root {
+/* #root {
   background-color: rgb(165, 204, 226);
   padding: 100px;
   margin: auto;
-}
+  
+} */
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
